@@ -9,3 +9,6 @@ find [path] -type f -exec chmod 644 {} \;
 
 // Display a count of exim mail from script
 grep cwd /var/log/exim_mainlog | grep -v /var/spool | awk -F"cwd=" '{print $2}' | awk '{print $1}' | sort | uniq -c | sort -n
+
+// Search whole server logs for a joomla exploit attack
+grep JDatabaseDriverMysqli /usr/local/apache/domlogs/* | awk '{print $1}'

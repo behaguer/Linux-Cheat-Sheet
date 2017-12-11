@@ -1,3 +1,7 @@
+// ***************************************************
+// File Commands to help with account server management.
+// ***************************************************
+
 // Search for "$GLOBALS[" in php files decending from current directory
 grep -rn --include '*.php' '$GLOBALS\[' .
 
@@ -7,8 +11,26 @@ find [path] -type d -exec chmod 755 {} \;
 // Fix file permissions recursively
 find [path] -type f -exec chmod 644 {} \;
 
+// Search whole server logs for a joomla exploit attack
+grep JDatabaseDriverMysqli /usr/local/apache/domlogs/* | awk '{print $1}'
+
+
+
+
+
+// ***************************************************
+// Exim Commands to help with Email server management.
+// ***************************************************
+
 // Display a count of exim mail from script
 grep cwd /var/log/exim_mainlog | grep -v /var/spool | awk -F"cwd=" '{print $2}' | awk '{print $1}' | sort | uniq -c | sort -n
 
-// Search whole server logs for a joomla exploit attack
-grep JDatabaseDriverMysqli /usr/local/apache/domlogs/* | awk '{print $1}'
+// Removing all of the emails in the queue that have been sent as "support@isonic.net.au" by using the following command:
+exim -bp | grep "support@isonic.net.au" | awk '{print $3}' | xargs exim -Mrm
+
+// Remove all messages in the queue
+You can use the following command to remove all of the messages in the queue as well:
+exim -bp | awk '/^ *[0-9]+[mhd]/{print "exim -Mrm " $3}' | bash
+
+// Remove all frozen messages
+exim -bp|grep frozen|awk '{print $3}' |xargs exim -Mrm
